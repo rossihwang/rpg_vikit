@@ -1,10 +1,14 @@
 SET(PROJECT_NAME vikit_common)
 PROJECT(${PROJECT_NAME})
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.3)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
+
+INCLUDE(CMakePackageConfigHelpers)
+INCLUDE(GNUInstallDirs)
+
 SET(CMAKE_BUILD_TYPE Release) # Release, RelWithDebInfo
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/CMakeModules/")
-SET(USE_ROS TRUE) # Set False if you want to build this package without Catkin
+SET(USE_ROS OFF) # Set False if you want to build this package without Catkin
 
 # Set build flags. Set IS_ARM on odroid board as environment variable
 SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
@@ -84,10 +88,9 @@ TARGET_LINK_LIBRARIES(test_vk_common_patch_score ${PROJECT_NAME})
 ################################################################################
 # Create the vikit_commonConfig.cmake file for other cmake projects.
 IF(NOT USE_ROS)
-  GET_TARGET_PROPERTY( FULL_LIBRARY_NAME ${PROJECT_NAME} LOCATION )
-  SET(vikit_common_LIBRARIES ${FULL_LIBRARY_NAME} )
-  SET(vikit_common_LIBRARY_DIR ${PROJECT_BINARY_DIR} )
-  SET(vikit_common_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+  SET(vikit_common_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/lib${PROJECT_NAME}.so)  # FIXME
+  SET(vikit_common_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+  SET(vikit_common_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
   CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/vikit_commonConfig.cmake.in
       ${CMAKE_CURRENT_BINARY_DIR}/vikit_commonConfig.cmake @ONLY IMMEDIATE )
   export( PACKAGE vikit_common )

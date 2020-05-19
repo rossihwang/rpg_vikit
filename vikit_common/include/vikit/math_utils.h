@@ -11,14 +11,14 @@
 
 #include <Eigen/Core>
 #include <Eigen/StdVector>
-#include <sophus/se3.h>
+#include <sophus/se3.hpp>
 
 namespace vk
 {
 
 using namespace Eigen;
 using namespace std;
-using namespace Sophus;
+using Sophus::SE3;
 
 Vector3d triangulateFeatureNonLin(
     const Matrix3d& R,
